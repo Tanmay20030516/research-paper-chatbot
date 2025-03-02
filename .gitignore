@@ -175,3 +175,4 @@ langchain_try.ipynb
 workflow.py
 app.py
 SimCSE.pdf
+.streamlit/secrets.toml

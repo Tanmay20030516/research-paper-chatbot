@@ -11,41 +11,54 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.prompts.chat import ChatPromptTemplate
 from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
+from dotenv import load_dotenv
+load_dotenv()
 
 # Streamlit UI
 st.set_page_config(page_title="Research paper Chatbot", layout="wide", page_icon="👨‍🎓")
 st.title("💬 Research paper Chatbot")
 
 # API Key Setup
-global groq_api_key, langsmith_api_key
+global GROQ_API_KEY, LANGSMITH_API_KEY
+
+
+def get_api_key(env_var: str, secret_key: str, sidebar_label: str, placeholder: str) -> str:
+    """Retrieve API key from environment variables, Streamlit secrets, or user input."""
+    api_key = os.getenv(env_var) or st.secrets.get(secret_key)  # Prioritize environment and secrets
+    if api_key:
+        st.sidebar.success(f"{sidebar_label} loaded successfully ✅", icon="🔑")
+    else:
+        api_key = st.sidebar.text_input(
+            label=f"#### Enter {sidebar_label} 👇",
+            placeholder=placeholder,
+            type="password",
+            key=env_var
+        )
+        if api_key:
+            st.sidebar.success(f"{sidebar_label} saved! ✅", icon="🔑")
+    return api_key
+
+
 with st.sidebar:
     st.title("💬 Research paper Chatbot")
-    if os.path.exists(".env") and os.environ.get("GROQ_API_KEY") is not None:
-        groq_api_key = os.environ["GROQ_API_KEY"]
-        st.success("API key loaded from .env", icon="🚀")
-    else:
-        groq_api_key = st.sidebar.text_input(
-            label="#### Enter GROQ API key 👇",
-            placeholder="Paste your GROQ API key, gsk-",
-            type="password", key="groq_api_key"
-        )
-        if groq_api_key:
-            st.sidebar.success("API key loaded!", icon="🚀")
-    os.environ["GROQ_API_KEY"] = groq_api_key
-    if os.path.exists(".env") and os.environ.get("LANGSMITH_API_KEY") is not None:
+    GROQ_API_KEY = get_api_key(
+        "GROQ_API_KEY",
+        "GROQ_API_KEY",
+        "Groq API Key",
+        "Paste your GROQ API key, gsk-"
+    )
+    LANGSMITH_API_KEY = get_api_key(
+        "LANGSMITH_API_KEY",
+        "LANGSMITH_API_KEY",
+        "LangSmith API Key",
+        "Paste your LangSmith API key, ls-"
+    )
+
+    if GROQ_API_KEY:
+        os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+    if LANGSMITH_API_KEY:
+        os.environ["LANGSMITH_API_KEY"] = LANGSMITH_API_KEY
         os.environ["LANGSMITH_TRACING"] = "true"
-        langsmith_api_key = os.environ["LANGSMITH_API_KEY"]
-        st.success("API key loaded from .env", icon="🚀")
-    else:
-        langsmith_api_key = st.sidebar.text_input(
-            label="#### Enter LangSmith API key 👇",
-            placeholder="Paste your LangSmith API key, ls-",
-            type="password", key="langsmith_api_key"
-        )
-        if langsmith_api_key:
-            st.sidebar.success("API key loaded!", icon="🚀")
-    os.environ["LANGSMITH_TRACING"] = "true"
-    os.environ["LANGSMITH_API_KEY"] = langsmith_api_key
 
 
 # Sidebar settings
@@ -57,7 +70,7 @@ embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all
 if "llm" not in st.session_state:
     props = {
         "temperature": temperature,
-        # "timeout": 4,
+        "timeout": 4,
     }
     st.session_state.llm = init_chat_model(
         model="llama3-8b-8192",
