@@ -63,7 +63,7 @@ with st.sidebar:
 
 # Sidebar settings
 st.sidebar.header("⚙️ Settings")
-temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.2, value=0.5)
+temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.5)
 
 # Load embeddings and LLM
 embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
