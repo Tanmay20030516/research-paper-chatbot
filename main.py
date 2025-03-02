@@ -12,8 +12,8 @@ from langchain_core.prompts.chat import ChatPromptTemplate
 from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
 
-# Streamlit UI setup
-st.set_page_config(page_title="Research paper Chatbot", layout="wide")
+# Streamlit UI
+st.set_page_config(page_title="Research paper Chatbot", layout="wide", page_icon="👨‍🎓")
 st.title("💬 Research paper Chatbot")
 
 # API Key Setup
