@@ -63,14 +63,14 @@ with st.sidebar:
 
 # Sidebar settings
 st.sidebar.header("⚙️ Settings")
-temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.2)
+temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.2, value=0.5)
 
 # Load embeddings and LLM
 embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 if "llm" not in st.session_state:
     props = {
         "temperature": temperature,
-        "timeout": 4,
+        "timeout": 3,
     }
     st.session_state.llm = init_chat_model(
         model="llama3-8b-8192",
@@ -84,7 +84,7 @@ if "embeddings" not in st.session_state:
 
 
 @st.cache_resource
-def chunk_and_index(path):
+def chunk_and_index(path: str):
     loader = PyMuPDFLoader(path, extract_tables='markdown')
     docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=2048, chunk_overlap=256)
