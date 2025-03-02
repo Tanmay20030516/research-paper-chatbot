@@ -33,6 +33,7 @@ with st.sidebar:
             st.sidebar.success("API key loaded!", icon="🚀")
     os.environ["GROQ_API_KEY"] = groq_api_key
     if os.path.exists(".env") and os.environ.get("LANGSMITH_API_KEY") is not None:
+        os.environ["LANGSMITH_TRACING"] = "true"
         langsmith_api_key = os.environ["LANGSMITH_API_KEY"]
         st.success("API key loaded from .env", icon="🚀")
     else:
@@ -43,6 +44,7 @@ with st.sidebar:
         )
         if langsmith_api_key:
             st.sidebar.success("API key loaded!", icon="🚀")
+    os.environ["LANGSMITH_TRACING"] = "true"
     os.environ["LANGSMITH_API_KEY"] = langsmith_api_key
 
 
