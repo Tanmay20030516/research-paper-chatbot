@@ -29,7 +29,7 @@ with st.sidebar:
             type="password", key="groq_api_key"
         )
         if groq_api_key:
-            st.sidebar.success("API key loaded", icon="🚀")
+            st.sidebar.success("API key loaded!", icon="🚀")
     os.environ["GROQ_API_KEY"] = groq_api_key
     if os.path.exists(".env") and os.environ.get("LANGSMITH_API_KEY") is not None:
         langsmith_api_key = os.environ["LANGSMITH_API_KEY"]
@@ -41,7 +41,7 @@ with st.sidebar:
             type="password", key="langsmith_api_key"
         )
         if langsmith_api_key:
-            st.sidebar.success("API key loaded", icon="🚀")
+            st.sidebar.success("API key loaded!", icon="🚀")
     os.environ["LANGSMITH_API_KEY"] = langsmith_api_key
 
 
@@ -129,8 +129,8 @@ graph_builder.add_edge(START, "retrieve")
 graph = graph_builder.compile()
 
 # Sidebar settings
-st.sidebar.header("📂 Upload Files for Custom Retrieval")
-uploaded_file = st.sidebar.file_uploader("Upload PDFs", type=["pdf"])
+st.sidebar.header("📂 Upload the Research paper")
+uploaded_file = st.sidebar.file_uploader("Upload PDF", type=["pdf"])
 if uploaded_file:
     st.sidebar.success("File uploaded", icon='🙌')
     begin_chunk = st.sidebar.button("Index the file")
