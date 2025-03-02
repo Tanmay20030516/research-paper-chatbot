@@ -19,6 +19,7 @@ st.title("💬 Research paper Chatbot")
 # API Key Setup
 global groq_api_key, langsmith_api_key
 with st.sidebar:
+    st.title("💬 Research paper Chatbot")
     if os.path.exists(".env") and os.environ.get("GROQ_API_KEY") is not None:
         groq_api_key = os.environ["GROQ_API_KEY"]
         st.success("API key loaded from .env", icon="🚀")
